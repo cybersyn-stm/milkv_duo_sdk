@@ -1,0 +1,9 @@
+ctrl_interface=/var/run/wpa_supplicant
+update_config=1
+country=CN
+
+network={
+    ssid="iphone"
+    psk="66668888"
+    key_mgmt=WPA-PSK
+}

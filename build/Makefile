@@ -572,23 +572,23 @@ br-rootfs-prepare:
 	${Q}cp -arf ${SYSTEM_OUT_DIR}/* $(BR_ROOTFS_DIR)/mnt/system/
 
 	# copy milkv buildroot overlay files
-	${Q}cp -arf $(TOP_DIR)/device/generic/br_overlay/common/* $(BR_ROOTFS_DIR)/
+	${Q}cp -rf $(TOP_DIR)/device/generic/br_overlay/common/* $(BR_ROOTFS_DIR)/
 ifneq ($(wildcard $(TOP_DIR)/device/generic/br_overlay/$(SDK_VER)),)
-	${Q}cp -arf $(TOP_DIR)/device/generic/br_overlay/$(SDK_VER)/* $(BR_ROOTFS_DIR)/
+	${Q}cp -rf $(TOP_DIR)/device/generic/br_overlay/$(SDK_VER)/* $(BR_ROOTFS_DIR)/
 endif
 
 	# copy milkv rootfs overlay files
-	${Q}cp -arf $(TOP_DIR)/device/generic/rootfs_overlay/common/* $(BR_ROOTFS_DIR)/
+	${Q}cp -rf $(TOP_DIR)/device/generic/rootfs_overlay/common/* $(BR_ROOTFS_DIR)/
 ifneq ($(wildcard $(TOP_DIR)/device/generic/rootfs_overlay/$(SDK_VER)),)
-	${Q}cp -arf $(TOP_DIR)/device/generic/rootfs_overlay/$(SDK_VER)/* $(BR_ROOTFS_DIR)/
+	${Q}cp -rf $(TOP_DIR)/device/generic/rootfs_overlay/$(SDK_VER)/* $(BR_ROOTFS_DIR)/
 endif
 ifneq ($(wildcard $(TOP_DIR)/device/generic/rootfs_overlay/$(BR_BOARD_TYPE)),)
-	${Q}cp -arf $(TOP_DIR)/device/generic/rootfs_overlay/$(BR_BOARD_TYPE)/* $(BR_ROOTFS_DIR)/
+	${Q}cp -rf $(TOP_DIR)/device/generic/rootfs_overlay/$(BR_BOARD_TYPE)/* $(BR_ROOTFS_DIR)/
 endif
 
 	# copy milkv board overlay files
 ifneq ($(wildcard $(TOP_DIR)/device/$(MV_BOARD)/overlay),)
-	${Q}cp -arf $(TOP_DIR)/device/$(MV_BOARD)/overlay/* $(BR_ROOTFS_DIR)/
+	${Q}cp -rf $(TOP_DIR)/device/$(MV_BOARD)/overlay/* $(BR_ROOTFS_DIR)/
 endif
 
 	# clean this directory for multiple targets
@@ -601,7 +601,7 @@ endif
 
 	# copy all files to buildroot overlay dir
 	${Q}mkdir -p $(BR_OVERLAY_DIR)
-	${Q}cp -arf $(BR_ROOTFS_DIR)/* $(BR_OVERLAY_DIR)
+	${Q}cp -rf $(BR_ROOTFS_DIR)/* $(BR_OVERLAY_DIR)
 
 BR_TARGET_OUTPUT_DIR=$(BR_DIR)/output/$(BR_BOARD)
 

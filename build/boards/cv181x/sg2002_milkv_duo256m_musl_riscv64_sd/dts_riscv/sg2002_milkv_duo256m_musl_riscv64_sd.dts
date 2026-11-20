@@ -20,6 +20,26 @@
 	status = "disabled";
 };
 
+
+&i2c1 {
+	status = "okay";
+
+    ds3231: ds3231@68 {
+    status = "okay";
+    compatible = "ds3231";
+    reg = <0x68>;
+    /*DuoS
+    interrupt-parent = <&portb>;
+    interrupts = <18 IRQ_TYPE_EDGE_RISING>;
+    irq-gpios = <&portb 18 GPIO_ACTIVE_HIGH>;
+    */
+    //Duo256M
+    interrupt-parent = <&porta>;
+    interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+    irq-gpios = <&porta 15 GPIO_ACTIVE_HIGH>;
+  };
+};
+
 &spi2 {
 	status = "okay";
 
@@ -32,8 +52,13 @@
 	mute-gpio-r = <&porte 1 GPIO_ACTIVE_LOW>;
 };
 
+/*
+ * UART1 is routed to GP0/GP1 (IIC0_SCL/IIC0_SDA) and is owned by the
+ * little core (C906L) running RT-Thread as its console.  Keep it disabled
+ * on the Linux side, otherwise both cores drive the same UART controller.
+ */
 &uart1 {
-	status = "okay";
+	status = "disabled";
 };
 
 &uart2 {

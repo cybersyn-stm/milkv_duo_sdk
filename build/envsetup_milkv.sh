@@ -897,6 +897,7 @@ function cvi_setup_env()
     fi
   fi
 
+  export FLASH_PARTITION_XML
   export SYSTEM_OUT_DIR
   export CROSS_COMPILE_PATH
   # buildroot config

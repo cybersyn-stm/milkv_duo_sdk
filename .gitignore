@@ -22,3 +22,8 @@ ncscope.*
 
 __pycache__
 .vscode
+
+# stray kernel build artifacts (kept out of the repository)
+linux_5.10/riscv/
+linux_5.10/modules/
+ramdisk/Image

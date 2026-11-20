@@ -18,6 +18,12 @@
 
 &i2c1 {
 	status = "okay";
+
+    ssd1306: ssd1306@3c {
+        compatible = "ssd1306";
+        reg = <0x3c>;
+        status = "okay";
+    };
 };
 
 &i2c2 {
@@ -38,6 +44,21 @@
 		goodix,rst-gpio = <&porta 19 GPIO_ACTIVE_HIGH>;
 		status = "okay";
 	};
+
+    ds3231: ds3231@68 {
+    status = "okay";
+    compatible = "ds3231";
+    reg = <0x68>;
+    /*DuoS
+    interrupt-parent = <&portb>;
+    interrupts = <18 IRQ_TYPE_EDGE_RISING>;
+    irq-gpios = <&portb 18 GPIO_ACTIVE_HIGH>;
+    */
+    //Duo256M
+    interrupt-parent = <&porta>;
+    interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+    irq-gpios = <&portb 15 GPIO_ACTIVE_HIGH>;
+  };
 };
 
 &spi3 {

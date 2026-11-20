@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# Start WiFi AP (NIXIETUBECLOCK) via hostapd.
+# Named S99x* so it runs AFTER S99user (the aic8800 WiFi driver is
+# loaded in background by duo-init.sh inside S99user).
+
+WLAN=wlan0
+AP_IP=192.168.50.1
+
+case "$1" in
+start)
+    # Wait for wlan0 to appear (driver load is asynchronous)
+    i=0
+    while [ $i -lt 60 ]; do
+        [ -d /sys/class/net/$WLAN ] && break
+        usleep 200000
+        i=$((i+1))
+    done
+
+    if [ ! -d /sys/class/net/$WLAN ]; then
+        echo "hostapd: $WLAN not found, abort" >> /tmp/hostapd.log
+        exit 0
+    fi
+
+    # Bring up wlan0 with a static IP (clients will route through this)
+    ifconfig $WLAN up
+    ifconfig $WLAN $AP_IP netmask 255.255.255.0
+
+    # Start hostapd in AP mode
+    /usr/sbin/hostapd -B /etc/hostapd.conf >> /tmp/hostapd.log 2>&1
+    if [ $? -ne 0 ]; then
+        echo "hostapd: failed to start, see /tmp/hostapd.log" >> /tmp/hostapd.log
+    fi
+
+    # Restart dnsmasq so it binds wlan0 too (dnsmasq starts at S80,
+    # before wlan0 exists). Now wlan0 is up, restart it to serve DHCP.
+    killall dnsmasq 2>/dev/null
+    /usr/sbin/dnsmasq --pid-file=/var/run/dnsmasq.pid >> /tmp/dnsmasq.log 2>&1
+    ;;
+stop)
+    killall hostapd 2>/dev/null
+    ;;
+restart)
+    $0 stop
+    $0 start
+    ;;
+*)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

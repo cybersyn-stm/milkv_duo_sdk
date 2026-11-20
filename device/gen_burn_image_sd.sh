@@ -26,7 +26,7 @@ if [ ! -d ${BR_HOST_BIN} ]; then
   exit 1
 fi
 
-export PATH=${BR_HOST_BIN}:${PATH}
+export PATH=${BR_HOST_BIN}:${BR_HOST_BIN}/../sbin:${BR_HOST_BIN}/../bin:${PATH}
 
 output_dir=$1
 echo ${output_dir}
@@ -34,7 +34,7 @@ pushd ${output_dir}
 
 [ -d tmp ] && rm -rf tmp
 
-genimage --config ${TOP_DIR}/device/${MV_BOARD}/genimage.cfg --rootpath fs/ --inputpath ${PWD} --outputpath ${PWD}
+fakeroot -- genimage --config ${TOP_DIR}/device/${MV_BOARD}/genimage.cfg --rootpath fs/ --inputpath ${PWD} --outputpath ${PWD}
 if [ $? -eq 0 ]; then
     echo "gnimage for ${MV_BOARD} success!"
 else

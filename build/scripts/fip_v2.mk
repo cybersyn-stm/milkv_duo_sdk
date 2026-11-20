@@ -13,9 +13,20 @@ FSBL_OUTPUT_PATH = ${FSBL_PATH}/build/${PROJECT_FULLNAME}
 ifeq ($(call qstrip,${CONFIG_ARCH}),riscv)
 fsbl-build: opensbi
 endif
+# C906L (little core) image packed into fip.bin as BLCP_2ND and started by FSBL.
+# Default: the FreeRTOS fast image built by this SDK.
+# Set C906L_IMAGE (environment/make variable) or CONFIG_C906L_IMAGE (build/.config)
+# to boot another RTOS on the little core, for example RT-Thread Nano:
+#   C906L_IMAGE=/path/to/rt-thread/bsp/cvitek/c906_little/rtthread.bin
+C906L_IMAGE ?= $(call qstrip,${CONFIG_C906L_IMAGE})
+ifeq ($(strip ${C906L_IMAGE}),)
 ifeq (${CONFIG_ENABLE_FREERTOS},y)
+C906L_IMAGE = ${FREERTOS_PATH}/cvitek/install/bin/cvirtos.bin
 fsbl-build: rtos
-fsbl%: export BLCP_2ND_PATH=${FREERTOS_PATH}/cvitek/install/bin/cvirtos.bin
+endif
+endif
+ifneq ($(strip ${C906L_IMAGE}),)
+fsbl%: export BLCP_2ND_PATH=${C906L_IMAGE}
 fsbl%: export RTOS_DUMP_PRINT_ENABLE=$(CONFIG_ENABLE_RTOS_DUMP_PRINT)
 fsbl%: export RTOS_DUMP_PRINT_SZ_IDX=$(CONFIG_DUMP_PRINT_SZ_IDX)
 fsbl%: export RTOS_FAST_IMAGE_TYPE=${CONFIG_FAST_IMAGE_TYPE}
